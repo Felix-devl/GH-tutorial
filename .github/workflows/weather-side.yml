@@ -1,0 +1,86 @@
+name: Wettervorhersage GitHub Pages (Branch)
+
+on:
+  push:
+    branches: [ "main" ]
+  schedule:
+    - cron: '0 7 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Code auschecken
+        uses: actions/checkout@v4
+
+      - name: Wetterdaten abrufen & HTML-Seite erzeugen
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            
+            const url = 'https://api.open-meteo.com/v1/forecast?latitude=52.52&longitude=13.41&daily=temperature_2m_max,temperature_2m_min,precipitation_sum&timezone=Europe%2FBerlin';
+            const response = await fetch(url);
+            const data = await response.json();
+            const daily = data.daily;
+
+            let tableRows = '';
+            for (let i = 0; i < daily.time.length; i++) {
+              tableRows += `<tr><td>${daily.time[i]}</td><td>${daily.temperature_2m_max[i]} °C</td><td>${daily.temperature_2m_min[i]} °C</td><td>${daily.precipitation_sum[i]} mm</td></tr>`;
+            }
+
+            const html = `<!DOCTYPE html>
+            <html lang="de">
+            <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>Wettervorhersage Berlin</title>
+              <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+              <style>
+                body { font-family: system-ui, sans-serif; background: #f8fafc; color: #1e293b; max-width: 800px; margin: 40px auto; padding: 0 20px; }
+                .card { background: white; padding: 24px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+                h1 { text-align: center; font-size: 1.5rem; margin-bottom: 24px; }
+                table { width: 100%; border-collapse: collapse; margin-top: 24px; }
+                th, td { padding: 10px; text-align: center; border-bottom: 1px solid #e2e8f0; }
+                th { background: #f1f5f9; }
+              </style>
+            </head>
+            <body>
+              <div class="card">
+                <h1>🌤️ 5-Tage Wettervorhersage Berlin</h1>
+                <canvas id="chart" height="120"></canvas>
+                <table>
+                  <thead>
+                    <tr><th>Datum</th><th>Max Temp</th><th>Min Temp</th><th>Niederschlag</th></tr>
+                  </thead>
+                  <tbody>${tableRows}</tbody>
+                </table>
+              </div>
+              <script>
+                new Chart(document.getElementById('chart'), {
+                  type: 'line',
+                  data: {
+                    labels: ${JSON.stringify(daily.time)},
+                    datasets: [
+                      { label: 'Max Temp (°C)', data: ${JSON.stringify(daily.temperature_2m_max)}, borderColor: '#ef4444', backgroundColor: 'rgba(239, 68, 68, 0.1)', fill: true, tension: 0.3 },
+                      { label: 'Min Temp (°C)', data: ${JSON.stringify(daily.temperature_2m_min)}, borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.1)', fill: true, tension: 0.3 }
+                    ]
+                  }
+                });
+              </script>
+            </body>
+            </html>`;
+
+            fs.mkdirSync('./public', { recursive: true });
+            fs.writeFileSync('./public/index.html', html);
+
+      - name: Auf gh-pages Branch pushen
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./public
+          publish_branch: gh-pages
