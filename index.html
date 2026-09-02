@@ -22,17 +22,17 @@
       <thead>
         <tr><th>Datum</th><th>Max Temp</th><th>Min Temp</th><th>Niederschlag</th></tr>
       </thead>
-      <tbody><tr><td>2026-09-01</td><td>21.6 °C</td><td>16 °C</td><td>3 mm</td></tr><tr><td>2026-09-02</td><td>21.5 °C</td><td>14 °C</td><td>0 mm</td></tr><tr><td>2026-09-03</td><td>21.1 °C</td><td>14.4 °C</td><td>1.6 mm</td></tr><tr><td>2026-09-04</td><td>25.5 °C</td><td>17.2 °C</td><td>3.7 mm</td></tr><tr><td>2026-09-05</td><td>20.5 °C</td><td>15.4 °C</td><td>12.9 mm</td></tr><tr><td>2026-09-06</td><td>20.9 °C</td><td>11.4 °C</td><td>0 mm</td></tr><tr><td>2026-09-07</td><td>26.2 °C</td><td>13.1 °C</td><td>0 mm</td></tr></tbody>
+      <tbody><tr><td>2026-09-02</td><td>22.5 °C</td><td>14.1 °C</td><td>0 mm</td></tr><tr><td>2026-09-03</td><td>21.1 °C</td><td>15.3 °C</td><td>0.6 mm</td></tr><tr><td>2026-09-04</td><td>19.3 °C</td><td>15.8 °C</td><td>20.98 mm</td></tr><tr><td>2026-09-05</td><td>21.8 °C</td><td>15.7 °C</td><td>2.8 mm</td></tr><tr><td>2026-09-06</td><td>21.6 °C</td><td>12 °C</td><td>0 mm</td></tr><tr><td>2026-09-07</td><td>28.3 °C</td><td>14.6 °C</td><td>3.3 mm</td></tr><tr><td>2026-09-08</td><td>26.6 °C</td><td>17.4 °C</td><td>0 mm</td></tr></tbody>
     </table>
   </div>
   <script>
     new Chart(document.getElementById('chart'), {
       type: 'line',
       data: {
-        labels: ["2026-09-01","2026-09-02","2026-09-03","2026-09-04","2026-09-05","2026-09-06","2026-09-07"],
+        labels: ["2026-09-02","2026-09-03","2026-09-04","2026-09-05","2026-09-06","2026-09-07","2026-09-08"],
         datasets: [
-          { label: 'Max Temp (°C)', data: [21.6,21.5,21.1,25.5,20.5,20.9,26.2], borderColor: '#ef4444', backgroundColor: 'rgba(239, 68, 68, 0.1)', fill: true, tension: 0.3 },
-          { label: 'Min Temp (°C)', data: [16,14,14.4,17.2,15.4,11.4,13.1], borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.1)', fill: true, tension: 0.3 }
+          { label: 'Max Temp (°C)', data: [22.5,21.1,19.3,21.8,21.6,28.3,26.6], borderColor: '#ef4444', backgroundColor: 'rgba(239, 68, 68, 0.1)', fill: true, tension: 0.3 },
+          { label: 'Min Temp (°C)', data: [14.1,15.3,15.8,15.7,12,14.6,17.4], borderColor: '#3b82f6', backgroundColor: 'rgba(59, 130, 246, 0.1)', fill: true, tension: 0.3 }
         ]
       }
     });
